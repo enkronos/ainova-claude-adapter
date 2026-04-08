@@ -100,7 +100,7 @@ describe('authorize adapter', () => {
     await app.close();
   });
 
-  test('validates capability token and forwards decision path', async () => {
+  test('validates capability token and forwards raw token to Ainova', async () => {
     const fetchFn = vi.fn().mockResolvedValue(
       new Response(
         JSON.stringify({
@@ -155,7 +155,13 @@ describe('authorize adapter', () => {
     expect(fetchFn.mock.calls[0]?.[1]).toMatchObject({
       method: 'POST',
     });
-    expect(String(fetchFn.mock.calls[0]?.[1]?.body)).toContain('"capability"');
+    expect(fetchFn.mock.calls[0]?.[1]).toMatchObject({
+      method: 'POST',
+      headers: expect.objectContaining({
+        'x-capability-token': token,
+      }),
+    });
+    expect(String(fetchFn.mock.calls[0]?.[1]?.body)).not.toContain('"capability"');
 
     await app.close();
   });

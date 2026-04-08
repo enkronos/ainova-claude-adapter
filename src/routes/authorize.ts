@@ -16,13 +16,17 @@ export async function registerAuthorizeRoute(
   app.post('/authorize', async (request, reply) => {
     const startedAt = performance.now();
     const payload = validateBody(request, authorizeRequestSchema);
-    const capability = await readCapabilityToken(request, {
+    const rawCapabilityTokenHeader = request.headers['x-capability-token'];
+    const capabilityToken = Array.isArray(rawCapabilityTokenHeader)
+      ? rawCapabilityTokenHeader[0]
+      : rawCapabilityTokenHeader;
+
+    await readCapabilityToken(request, {
       secret: options.capabilityTokenSecret,
     });
 
-    const decision = await options.ainovaClient.authorize({
-      ...payload,
-      capability,
+    const decision = await options.ainovaClient.authorize(payload, {
+      capabilityToken,
     });
 
     const latencyMs = Math.round((performance.now() - startedAt) * 100) / 100;
