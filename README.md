@@ -1,6 +1,16 @@
 # Ainova Claude Adapter
 
-Stateless adapter that lets Claude Managed Agents ask Ainova for deterministic authorization before executing an action.
+Govern Claude agents. Before they act.
+
+This adapter enables Claude Managed Agents to operate under deterministic governance constraints enforced by Ainova OS.
+
+It introduces:
+- policy enforcement at runtime
+- budget-aware execution
+- auditability by design
+
+Claude builds agents.
+Ainova governs them.
 
 ## What it does
 
