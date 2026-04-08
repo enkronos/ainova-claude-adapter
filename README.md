@@ -182,3 +182,9 @@ docker run --rm -p 8080:8080 \
   -e CAPABILITY_TOKEN_SECRET='replace-me' \
   ainova-claude-adapter
 ```
+
+## Disclaimer
+
+This project is not affiliated with, endorsed by, or sponsored by Anthropic.
+
+Claude is a trademark of Anthropic.
