@@ -3,7 +3,6 @@ import {
   authorizeDecisionSchema,
   type AuthorizeDecision,
   type AuthorizeRequest,
-  type CapabilityTokenClaims,
 } from '../types/action.js';
 
 type FetchLike = typeof fetch;
@@ -16,10 +15,6 @@ export type AinovaClientOptions = {
   timeoutMs?: number;
   maxRetries?: number;
   fetchFn?: FetchLike;
-};
-
-export type AinovaAuthorizePayload = AuthorizeRequest & {
-  capability?: CapabilityTokenClaims | null;
 };
 
 export type AuditEvent = {
@@ -55,12 +50,15 @@ export class AinovaClient {
     this.fetchFn = options.fetchFn ?? fetch;
   }
 
-  async authorize(payload: AinovaAuthorizePayload): Promise<AuthorizeDecision> {
+  async authorize(
+    payload: AuthorizeRequest,
+    options: { capabilityToken?: string } = {},
+  ): Promise<AuthorizeDecision> {
     for (let attempt = 0; attempt <= this.maxRetries; attempt += 1) {
       try {
         const response = await this.fetchWithTimeout(this.authorizePath, {
           method: 'POST',
-          headers: this.buildHeaders(),
+          headers: this.buildHeaders(options.capabilityToken),
           body: JSON.stringify(payload),
         });
 
@@ -98,10 +96,11 @@ export class AinovaClient {
     }
   }
 
-  private buildHeaders() {
+  private buildHeaders(capabilityToken?: string) {
     return {
       'content-type': 'application/json',
       ...(this.bearerToken ? { authorization: `Bearer ${this.bearerToken}` } : {}),
+      ...(capabilityToken ? { 'x-capability-token': capabilityToken } : {}),
     };
   }
 
