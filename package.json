@@ -1,7 +1,6 @@
 {
   "name": "ainova-claude-adapter",
   "version": "0.1.0",
-  "private": true,
   "description": "Stateless Claude Managed Agents to Ainova governance adapter.",
   "type": "module",
   "engines": {
