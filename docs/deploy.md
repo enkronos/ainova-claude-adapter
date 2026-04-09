@@ -5,10 +5,22 @@ This adapter is production-ready from a code and CI perspective, but it is inten
 Today the recommended publication path is:
 
 1. run CI on every PR and `main`
-2. deploy manually to the chosen runtime
-3. run a short `/authorize` smoke against the live Ainova contract
+2. publish the container image to GHCR from `main`
+3. deploy that published image to the chosen runtime
+4. run a short `/authorize` smoke against the live Ainova contract
 
-This keeps the first production rollout simple and easy to reason about.
+This keeps the first production rollout simple, versioned, and easy to reason about.
+
+## Publication artifact
+
+Published image:
+
+- `ghcr.io/enkronos/ainova-claude-adapter:latest`
+- `ghcr.io/enkronos/ainova-claude-adapter:sha-<commit>`
+
+GitHub Actions workflow:
+
+- `.github/workflows/publish.yml`
 
 ## Runtime assumptions
 
@@ -34,6 +46,23 @@ Optional:
 - `RATE_LIMIT_MAX`
 - `RATE_LIMIT_WINDOW_MS`
 
+## Deploy from published image
+
+The preferred runtime path is to deploy the image already published by GitHub Actions.
+
+```bash
+docker pull ghcr.io/enkronos/ainova-claude-adapter:latest
+
+docker run --rm -p 8080:8080 \
+  -e PORT=8080 \
+  -e HOST=0.0.0.0 \
+  -e AINOVA_BASE_URL='https://api.ainova.io' \
+  -e AINOVA_AUTHORIZE_PATH='/v1/authorize' \
+  -e AINOVA_BEARER_TOKEN='...' \
+  -e CAPABILITY_TOKEN_SECRET='...' \
+  ghcr.io/enkronos/ainova-claude-adapter:latest
+```
+
 ## Manual deploy
 
 ### Option A — Node.js process
@@ -52,7 +81,7 @@ export CAPABILITY_TOKEN_SECRET='...'
 npm start
 ```
 
-### Option B — Docker
+### Option B — Local Docker build
 
 ```bash
 docker build -t ainova-claude-adapter .
