@@ -58,6 +58,14 @@ npm test
 npm run build
 ```
 
+CI is defined in:
+
+- `.github/workflows/ci.yml`
+
+Manual publication and smoke guidance lives in:
+
+- `docs/deploy.md`
+
 Run locally:
 
 ```bash
@@ -182,6 +190,17 @@ docker run --rm -p 8080:8080 \
   -e CAPABILITY_TOKEN_SECRET='replace-me' \
   ainova-claude-adapter
 ```
+
+## Deployment status
+
+This repository now has a real CI path.
+
+The recommended first production rollout is:
+
+1. merge to `main`
+2. let CI validate install/test/build
+3. deploy manually using `docs/deploy.md`
+4. run the three-case `/authorize` smoke
 
 ## Disclaimer
 
