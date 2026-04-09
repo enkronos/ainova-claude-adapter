@@ -62,6 +62,10 @@ CI is defined in:
 
 - `.github/workflows/ci.yml`
 
+Container publication is defined in:
+
+- `.github/workflows/publish.yml`
+
 Manual publication and smoke guidance lives in:
 
 - `docs/deploy.md`
@@ -193,14 +197,19 @@ docker run --rm -p 8080:8080 \
 
 ## Deployment status
 
-This repository now has a real CI path.
+This repository now has:
+
+- a real CI path
+- a GHCR publication workflow
+- a deploy runbook with smoke guidance
 
 The recommended first production rollout is:
 
 1. merge to `main`
 2. let CI validate install/test/build
-3. deploy manually using `docs/deploy.md`
-4. run the three-case `/authorize` smoke
+3. publish the image from `main`
+4. deploy using `docs/deploy.md`
+5. run the three-case `/authorize` smoke
 
 ## Disclaimer
 
