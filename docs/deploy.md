@@ -79,6 +79,8 @@ export AINOVA_BEARER_TOKEN='...'
 export CAPABILITY_TOKEN_SECRET='...'
 
 npm start
+
+The production start script resolves to `node dist/src/server.js`.
 ```
 
 ### Option B — Local Docker build
